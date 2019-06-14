@@ -25,7 +25,7 @@ function translate(action, address, setup) {
   const gdtIndex = parseInt(selector, 16)>>>3;
 
   log(`Selected GDT index: ${gdtIndex}`);
-  
+
   if (gdtIndex == 0) {
     throw new Error("Segmento nulo");
   }
@@ -33,7 +33,7 @@ function translate(action, address, setup) {
   if (gdtIndex >= setup.gdt.length) {
     throw new Error(`Índice de segmento erróneo: ${gdtIndex}`);
   }
-  
+
   const gdtObj = setup.gdt[gdtIndex];
 
   if (parseInt(addr, 16) > parseInt(gdtObj.limit, 16)) {
@@ -41,7 +41,7 @@ function translate(action, address, setup) {
     throw new Error(`Offset mayor al límite del segmento: ${addr} > ${gdtObj.limit}`);
   }
 
-  const linealAddress =  parseInt(addr, 16) + parseInt(gdtObj.base, 16);
+  const linealAddress = parseInt(addr, 16) + parseInt(gdtObj.base, 16);
 
   if (!setup.pagination) {
     return linealAddress.toString(16);
@@ -61,7 +61,7 @@ function translate(action, address, setup) {
     if (!pageDirectory[pdIndex]) {
       throw new Error(`No hay Page Directory Entry definida para el index ${pdIndex}`);
     }
-    
+
     const pdEntry = pageDirectory[pdIndex];
 
     if (!pdEntry.p) {
@@ -79,7 +79,7 @@ function translate(action, address, setup) {
     log(`ptIndex = ${ptIndex}`);
 
     if (!pageTable[ptIndex]) {
-      throw new Error(`No está definida una entrada de Page Table para el índice ${ptIndex}`);      
+      throw new Error(`No está definida una entrada de Page Table para el índice ${ptIndex}`);
     }
 
     const pageTableEntry = pageTable[ptIndex];
@@ -87,11 +87,11 @@ function translate(action, address, setup) {
     if (!pageTableEntry.p) {
       throw new Error("Page Table Entry no está presente");
     }
-    
+
     const basePhysicalAddress = parseInt(pageTableEntry.baseAddress, 16);
 
     const physicalAddress = basePhysicalAddress + (parseInt(addr, 16) % 4096);
-    
+
     return physicalAddress.toString(16);
   }
 }
