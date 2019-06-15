@@ -6,6 +6,13 @@ function log(message) {
   }
 }
 
+/**
+ * @param {string} action read, write or execute
+ * @param {int} quantity
+ * @param {string} address selector:offset
+ * @param {Object} setup
+ * @return {Object}
+ */
 function translate(action, quantity, address, setup) {
   let [selector, addr] = address.split(":");
 
