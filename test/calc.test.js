@@ -29,7 +29,7 @@ const setup = {
                 "rw": 1,
                 "us": 1
             },
-            "1": {
+            "1": { 
                 "pageTableBaseDir": "002000",
                 "p": 1,
                 "rw": 1,
@@ -40,7 +40,13 @@ const setup = {
                 "p": 1,
                 "rw": 1,
                 "us": 1
-            }
+            },
+          "3": { // page Table no presente
+            "pageTableBaseDir": "004000",
+            "p": 0,
+            "rw": 1,
+            "us": 1,
+          }
         }
     },
     "pageTables": {
@@ -63,10 +69,10 @@ const setup = {
             }
         },
         "003000": {
-            "0": {
+            "0": { // Página no presente
                 "baseAddress": "700000",
                 "g": 0,
-                "p": 1,
+                "p": 0,
                 "rw": 1,
                 "us": 1
             }
@@ -83,5 +89,17 @@ describe('Translator Tests', function () {
   
   it('Debería traducir bien una dirección con paginación', () => {
     expect(translate("read", 1, "8:0", setup).address).to.equal("500030");
+  });
+
+  it('Debería fallar al tratar de acceder a una Page Table no presente', () => {
+    const setupCopy = _.cloneDeep(setup);
+    setupCopy.gdt[1].g = 1; // Habilito esto para tener mayor rango de direcciones
+    expect(translate.bind(this, "read", 1, "8:00C00008", setupCopy)).to.throw("Page Directory entry no está presente");    
+  });
+
+  it('Debería fallar al tratar de acceder a una página no presente', () => {
+    const setupCopy = _.cloneDeep(setup);
+    setupCopy.gdt[1].g = 1; // Habilito esto para tener mayor rango de direcciones
+    expect(translate.bind(this, "read", 1, "8:00800008", setupCopy)).to.throw("Page Table Entry no está presente");
   });
 });

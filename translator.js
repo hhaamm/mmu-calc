@@ -31,7 +31,7 @@ function translate(action, quantity, address, setup) {
 
   const gdtObj = setup.gdt[gdtIndex];
 
-  const realLimit = parseInt(gdtObj.limit, 16);
+  let realLimit = parseInt(gdtObj.limit, 16);
 
   if (gdtObj.g) {
     realLimit = realLimit * 4096 + 4095;
